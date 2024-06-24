@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://packages.confluent.io/maven/')
+    }
+
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    implementation 'org.apache.kafka:connect-api:3.7.0'
+
+    implementation 'io.qdrant:client:1.9.1'
+    implementation 'io.grpc:grpc-protobuf:1.64.0'
+    implementation 'com.google.guava:guava:33.2.1-jre'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+    implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+
+}
+
+group = 'io.qdrant'
+version = '1.0.0'
+description = 'qdrant-kafka'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+	useJUnitPlatform()
+}
