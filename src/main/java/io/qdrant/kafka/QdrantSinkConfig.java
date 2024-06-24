@@ -22,7 +22,7 @@ public class QdrantSinkConfig extends AbstractConfig {
         .define(
             GRPC_URL,
             ConfigDef.Type.STRING,
-            "http://localhost:6334/",
+            "http://localhost:6334",
             ConfigDef.Importance.HIGH,
             "Qdrant gRPC URL")
         .define(

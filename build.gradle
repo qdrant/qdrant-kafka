@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.apache.kafka:connect-api:3.7.0'
 
     implementation 'io.qdrant:client:1.9.1'
-    implementation 'io.grpc:grpc-protobuf:1.64.0'
+    implementation 'io.grpc:grpc-protobuf:1.59.0'
     implementation 'com.google.guava:guava:33.2.1-jre'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
@@ -51,6 +51,7 @@ test {
 
 shadowJar {
     minimize()
+    mergeServiceFiles()
     archiveClassifier.set('confluent')
 }
 
