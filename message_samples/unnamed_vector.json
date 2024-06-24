@@ -1,7 +1,7 @@
 {
     "collection_name": "kafka",
     "id": 1,
-    "shard_key_selector": 5342,
+    "shard_key_selector": [5342, "some-other-key"],
     "vector": [
         0.1,
         0.2,

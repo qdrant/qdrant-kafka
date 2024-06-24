@@ -1,7 +1,7 @@
 {
     "collection_name": "kafka",
     "id": 1,
-    "shard_key_selector": 5235,
+    "shard_key_selector": [5235],
     "vector": {
         "some-sparse": {
             "indices": [

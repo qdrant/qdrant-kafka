@@ -1,13 +1,8 @@
 # Qdrant-Kafka Connector
 
-This connector enables Qdrant to be a sink destination in Kafka Connect. You can stream vector data into a Qdrant collection. Supports named, unnamed dense/sparse vectors.
+Use Qdrant as a sink destination in Kafka Connect. You can stream vector data into a Qdrant collection. Supports named, unnamed dense/sparse vectors.
 
-TODO:
-
-- [x] Implementation
-- [x] Unit tests
-- [ ] Documentation/Usage examples
-- [ ] Integration tests
+TODO: USAGE
 
 ## LICENSE
 

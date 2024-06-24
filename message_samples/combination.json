@@ -1,7 +1,7 @@
 {
     "collection_name": "kafka",
     "id": "a10435b5-2a58-427a-a3a0-a5d845b147b7",
-    "shard_key_selector": "some-key",
+    "shard_key_selector": ["some-key"],
     "vector": {
         "some-other-dense": [
             0.1,
