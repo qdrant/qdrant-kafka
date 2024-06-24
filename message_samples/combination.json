@@ -1,0 +1,48 @@
+{
+    "collection_name": "kafka",
+    "id": "a10435b5-2a58-427a-a3a0-a5d845b147b7",
+    "shard_key_selector": "some-key",
+    "vector": {
+        "some-other-dense": [
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8
+        ],
+        "some-sparse": {
+            "indices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+            ],
+            "values": [
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5,
+                0.6,
+                0.7,
+                0.8,
+                0.9,
+                1.0
+            ]
+        }
+    },
+    "payload": {
+        "name": "kafka",
+        "description": "Kafka is a distributed streaming platform",
+        "url": "https://kafka.apache.org/"
+    }
+}
