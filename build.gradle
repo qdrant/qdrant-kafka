@@ -1,16 +1,25 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 plugins {
+    id 'java'
     id 'java-library'
     id 'maven-publish'
+
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
+
+group = 'io.qdrant'
+version = '1.0.0'
+description = 'qdrant-kafka'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
 
 repositories {
     mavenLocal()
+    mavenCentral()
     maven {
         url = uri('https://packages.confluent.io/maven/')
-    }
-
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
     }
 }
 
@@ -30,32 +39,60 @@ dependencies {
 
 }
 
-group = 'io.qdrant'
-version = '1.0.0'
-description = 'qdrant-kafka'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 java {
     withSourcesJar()
     withJavadocJar()
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
+test {
+	useJUnitPlatform()
+}
+
+shadowJar {
+    minimize()
+    archiveClassifier.set('confluent')
+}
+
+ext.releaseDate = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDateTime.now())
+def archiveFilename = 'qdrant-kafka'
+
+task prepareConfluentArchive(type: Copy) {
+    group = 'Confluent'
+    dependsOn 'shadowJar'
+
+    def baseDir = "$archiveFilename-${project.version}"
+    from('archive/manifest.json') {
+        expand project.properties
+        destinationDir = file "$buildDir/confluentArchive/$baseDir"
+    }
+
+    from('archive/assets') {
+        into 'assets'
+    }
+
+    from('archive/etc') {
+        include 'qdrant-kafka.properties'
+        into 'etc'
+    }
+
+    from("$buildDir/libs") {
+        include "${project.name}-${project.version}-confluent.jar"
+        into 'lib'
+    }
+
+    from('.') {
+        include 'README.md', 'LICENSE'
+        into 'doc'
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(Javadoc) {
-    options.encoding = 'UTF-8'
-}
-
-test {
-	useJUnitPlatform()
+task createConfluentArchive(type: Zip) {
+    group = 'Confluent'
+    dependsOn prepareConfluentArchive
+    from "$buildDir/confluentArchive"
+    archiveBaseName.set('')
+    archiveAppendix.set(archiveFilename)
+    archiveVersion.set(project.version.toString())
+    destinationDirectory.set(file("$buildDir/confluent"))
 }
