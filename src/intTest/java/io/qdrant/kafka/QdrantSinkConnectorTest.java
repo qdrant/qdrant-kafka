@@ -1,6 +1,7 @@
 /* (C)2024 */
 package io.qdrant.kafka;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,8 @@ public class QdrantSinkConnectorTest extends BaseKafkaConnectTest {
     int sparseVecCount = randomPositiveInt(100);
 
     for (int i = 0; i < pointsCount; i++) {
-      writeSparseVector(sparseVecCollection, i, sparseVecName, sparseVecCount);
+      String uuid = UUID.randomUUID().toString();
+      writeSparseVector(sparseVecCollection, uuid, sparseVecName, sparseVecCount);
     }
 
     waitForPoints(sparseVecCollection, pointsCount);

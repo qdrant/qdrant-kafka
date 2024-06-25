@@ -1,8 +1,8 @@
 {
   "name": "qdrant-kafka",
   "version": "${project.version}",
-  "title": "Qdrant Sink Connector for Apache Kafka",
-  "description": "The official Kafka Sink Connector for Qdrant.",
+  "title": "Qdrant Connector for Apache Kafka",
+  "description": "Connector to use Qdrant as a sink destination in Kafka Connect.",
   "owner": {
     "username": "qdrant",
     "name": "Qdrant",
@@ -36,7 +36,7 @@
   },
   "logo": "assets/qdrant_logo.png",
   "documentation_url": "https://github.com/qdrant/qdrant-kafka/blob/main/README.md",
-  "source_url": "https://github.com/qdrant/qdrant-kafka/tree/main",
+  "source_url": "https://github.com/qdrant/qdrant-kafka/",
   "docker_image": {},
   "license": [
     {
