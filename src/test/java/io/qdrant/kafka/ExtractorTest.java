@@ -80,7 +80,7 @@ class ExtractorTest {
     valueMap.put("payload", null);
 
     ValueExtractor extractor = new ValueExtractor(valueMap);
-    assertNull(extractor.getPayload());
+    assertEquals(extractor.getPayload(), new HashMap<String, Value>());
   }
 
   @Test

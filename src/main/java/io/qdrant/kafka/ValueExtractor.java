@@ -8,6 +8,7 @@ import io.qdrant.client.grpc.JsonWithInt.Value;
 import io.qdrant.client.grpc.Points.PointId;
 import io.qdrant.client.grpc.Points.PointStruct;
 import io.qdrant.client.grpc.Points.Vectors;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.kafka.connect.errors.DataException;
@@ -57,7 +58,7 @@ class ValueExtractor {
     Value payload = this.valueMap.get(PAYLOAD_KEY);
 
     if (payload == null) {
-      return null;
+      return new HashMap<>();
     }
 
     switch (payload.getKindCase()) {
@@ -65,7 +66,7 @@ class ValueExtractor {
         return payload.getStructValue().getFieldsMap();
 
       case NULL_VALUE:
-        return null;
+        return new HashMap<>();
 
       default:
         throw new DataException("Payload must be an object.");

@@ -1,3 +1,4 @@
+/* (C)2024 */
 package io.qdrant.kafka;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +14,7 @@ class QdrantSinkConfigTest {
   @Test
   void testDefaultConfigValues() {
     QdrantSinkConfig config = new QdrantSinkConfig(new HashMap<>());
-    assertEquals("http://localhost:6334/", config.getGrpcUrl());
+    assertEquals("http://localhost:6334", config.getGrpcUrl());
     assertEquals(new Password(""), config.getApiKey());
   }
 
@@ -34,7 +35,7 @@ class QdrantSinkConfigTest {
     customConfig.put(QdrantSinkConfig.API_KEY, "custom-api-key");
 
     QdrantSinkConfig config = new QdrantSinkConfig(customConfig);
-    assertEquals("http://localhost:6334/", config.getGrpcUrl());
+    assertEquals("http://localhost:6334", config.getGrpcUrl());
     assertEquals(new Password("custom-api-key"), config.getApiKey());
   }
 
@@ -43,8 +44,7 @@ class QdrantSinkConfigTest {
     ConfigDef configDef = QdrantSinkConfig.conf();
     assertNotNull(configDef);
 
-    assertEquals(
-        "http://localhost:6334/", configDef.defaultValues().get(QdrantSinkConfig.GRPC_URL));
+    assertEquals("http://localhost:6334", configDef.defaultValues().get(QdrantSinkConfig.GRPC_URL));
     assertEquals("", ((Password) configDef.defaultValues().get(QdrantSinkConfig.API_KEY)).value());
   }
 
