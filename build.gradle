@@ -2,98 +2,149 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 plugins {
-    id 'java'
-    id 'java-library'
-    id 'maven-publish'
+	id 'java'
+	id 'java-library'
+	id 'maven-publish'
 
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id "com.diffplug.spotless" version "6.22.0"
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'io.qdrant'
 version = '1.0.0'
-description = 'qdrant-kafka'
+description = 'Kafka Sink Connector for Qdrant.'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
 
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-        url = uri('https://packages.confluent.io/maven/')
-    }
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url = uri('https://packages.confluent.io/maven/')
+	}
 }
+
+sourceSets {
+	intTest {
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+	}
+}
+
+configurations {
+	intTestImplementation.extendsFrom implementation
+	intTestImplementation.extendsFrom testImplementation
+	intTestRuntimeOnly.extendsFrom runtimeOnly
+	intTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+def kafkaVersion = '3.5.0'
 
 dependencies {
-    implementation 'org.apache.kafka:connect-api:3.7.0'
+	implementation "org.apache.kafka:connect-api:$kafkaVersion"
+	implementation 'io.qdrant:client:1.9.1'
+	implementation 'io.grpc:grpc-protobuf:1.59.0'
+	implementation 'com.google.guava:guava:33.2.1-jre'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
+	implementation 'org.slf4j:slf4j-api:2.0.13'
 
-    implementation 'io.qdrant:client:1.9.1'
-    implementation 'io.grpc:grpc-protobuf:1.59.0'
-    implementation 'com.google.guava:guava:33.2.1-jre'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
-    implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
-    implementation 'org.slf4j:slf4j-api:2.0.13'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-
+	intTestImplementation 'org.testcontainers:junit-jupiter:1.19.6'
+	intTestImplementation 'org.testcontainers:qdrant:1.19.6'
+	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
+	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
+	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion"
+	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion"
+	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
+	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
+	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion:test"
+	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion:test"
 }
 
-
 java {
-    withSourcesJar()
-    withJavadocJar()
+	withSourcesJar()
+	withJavadocJar()
 }
 
 test {
 	useJUnitPlatform()
 }
 
+spotless {
+  java {
+    importOrder()
+    removeUnusedImports()
+    cleanthat()
+    googleJavaFormat()
+    formatAnnotations()
+  }
+}
+
 shadowJar {
-    minimize()
-    mergeServiceFiles()
-    archiveClassifier.set('confluent')
+	mergeServiceFiles()
+	archiveClassifier.set('')
 }
 
 ext.releaseDate = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDateTime.now())
 def archiveFilename = 'qdrant-kafka'
 
 task prepareConfluentArchive(type: Copy) {
-    group = 'Confluent'
-    dependsOn 'shadowJar'
+	group = 'Confluent'
+	dependsOn 'shadowJar'
 
-    def baseDir = "$archiveFilename-${project.version}"
-    from('archive/manifest.json') {
-        expand project.properties
-        destinationDir = file "$buildDir/confluentArchive/$baseDir"
-    }
+	def baseDir = "$archiveFilename-${project.version}"
+	from('archive/manifest.json') {
+		expand project.properties
+		destinationDir = file "$buildDir/confluentArchive/$baseDir"
+	}
 
-    from('archive/assets') {
-        into 'assets'
-    }
+	from('archive/assets') {
+		into 'assets'
+	}
 
-    from('archive/etc') {
-        include 'qdrant-kafka.properties'
-        into 'etc'
-    }
+	from('archive/etc') {
+		include 'qdrant-kafka.properties'
+		into 'etc'
+	}
 
-    from("$buildDir/libs") {
-        include "${project.name}-${project.version}-confluent.jar"
-        into 'lib'
-    }
+	from("$buildDir/libs") {
+		include "${project.name}-${project.version}.jar"
+		into 'lib'
+	}
 
-    from('.') {
-        include 'README.md', 'LICENSE'
-        into 'doc'
-    }
+	from('.') {
+		include 'README.md', 'LICENSE'
+		into 'doc'
+	}
 }
 
 task createConfluentArchive(type: Zip) {
-    group = 'Confluent'
-    dependsOn prepareConfluentArchive
-    from "$buildDir/confluentArchive"
-    archiveBaseName.set('')
-    archiveAppendix.set(archiveFilename)
-    archiveVersion.set(project.version.toString())
-    destinationDirectory.set(file("$buildDir/confluent"))
+	group = 'Confluent'
+	dependsOn prepareConfluentArchive
+	from "$buildDir/confluentArchive"
+	archiveBaseName.set('')
+	archiveAppendix.set(archiveFilename)
+	archiveVersion.set(project.version.toString())
+	destinationDirectory.set(file("$buildDir/confluent"))
 }
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs integration tests.'
+	group = 'verification'
+
+	testClassesDirs = sourceSets.intTest.output.classesDirs
+	classpath = sourceSets.intTest.runtimeClasspath
+	shouldRunAfter test
+
+	useJUnitPlatform()
+
+	testLogging {
+		events "passed"
+	}
+}
+
+check.dependsOn integrationTest
