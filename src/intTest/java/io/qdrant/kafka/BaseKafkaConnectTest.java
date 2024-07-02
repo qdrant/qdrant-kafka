@@ -8,7 +8,6 @@ import static org.apache.kafka.connect.runtime.ConnectorConfig.VALUE_CONVERTER_C
 import static org.apache.kafka.connect.runtime.SinkConnectorConfig.TOPICS_CONFIG;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -152,7 +151,8 @@ public class BaseKafkaConnectTest extends BaseQdrantTest {
     connect.kafka().produce(topicName, message);
   }
 
-  void writeMultiVector(String collectionName, Object id, int vectorSize, String name, int multiSize)
+  void writeMultiVector(
+      String collectionName, Object id, int vectorSize, String name, int multiSize)
       throws Exception {
     Map<String, Object> messageMap = new HashMap<>();
     messageMap.put("collection_name", collectionName);
