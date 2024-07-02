@@ -7,6 +7,8 @@ on:
       - edited
       - synchronize
       - reopened
+  schedule:
+    - cron: 0 0 * * *
 
 permissions:
   contents: write
@@ -14,7 +16,7 @@ permissions:
 
 jobs:
   build:
-    name: Build
+    name: Test and Build
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +29,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build And Test
+      - name: Gradle Build
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.5

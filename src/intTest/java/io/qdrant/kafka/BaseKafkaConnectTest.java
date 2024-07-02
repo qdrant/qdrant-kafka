@@ -8,8 +8,10 @@ import static org.apache.kafka.connect.runtime.ConnectorConfig.VALUE_CONVERTER_C
 import static org.apache.kafka.connect.runtime.SinkConnectorConfig.TOPICS_CONFIG;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -141,6 +143,27 @@ public class BaseKafkaConnectTest extends BaseQdrantTest {
 
     Map<String, Object> vectorMap = new HashMap<>();
     vectorMap.put(name, sparseVectorMap);
+
+    messageMap.put("vector", vectorMap);
+
+    String message = new ObjectMapper().writeValueAsString(messageMap);
+
+    connect.kafka().produce(topicName, message);
+  }
+
+  void writeMultiVector(
+      String collectionName, Object id, int vectorSize, String name, int multiSize)
+      throws Exception {
+    Map<String, Object> messageMap = new HashMap<>();
+    messageMap.put("collection_name", collectionName);
+    messageMap.put("id", id);
+
+    Map<String, Object> vectorMap = new HashMap<>();
+    List<List<Float>> multiVector = new ArrayList<>(multiSize);
+    for (int i = 0; i < multiSize; i++) {
+      multiVector.add(randomVector(vectorSize));
+    }
+    vectorMap.put(name, multiVector);
 
     messageMap.put("vector", vectorMap);
 

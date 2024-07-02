@@ -7,6 +7,8 @@ import io.qdrant.client.QdrantClient;
 import io.qdrant.client.QdrantGrpcClient;
 import io.qdrant.client.grpc.Collections.CreateCollection;
 import io.qdrant.client.grpc.Collections.Distance;
+import io.qdrant.client.grpc.Collections.MultiVectorComparator;
+import io.qdrant.client.grpc.Collections.MultiVectorConfig;
 import io.qdrant.client.grpc.Collections.SparseVectorConfig;
 import io.qdrant.client.grpc.Collections.SparseVectorParams;
 import io.qdrant.client.grpc.Collections.VectorParams;
@@ -44,6 +46,10 @@ public class BaseQdrantTest {
   String sparseVecCollection = "sparse-vec-collection";
   String sparseVecName = "sparse-vec";
 
+  String multiVecCollection = "multi-vec-collection";
+  String multiVecName = "multi-vec";
+  int multiVecSize = 58;
+
   @BeforeEach
   void setup() throws Exception {
     qdrantClient =
@@ -76,6 +82,19 @@ public class BaseQdrantTest {
                         .putMap(sparseVecName, SparseVectorParams.getDefaultInstance()))
                 .build())
         .get();
+
+    // Create multi vector collection
+    Map<String, VectorParams> multiVecParams = new HashMap<>();
+    multiVecParams.put(
+        multiVecName,
+        VectorParams.newBuilder()
+            .setSize(multiVecSize)
+            .setDistance(Distance.Dot)
+            .setMultivectorConfig(
+                MultiVectorConfig.newBuilder().setComparator(MultiVectorComparator.MaxSim).build())
+            .build());
+
+    qdrantClient.createCollectionAsync(multiVecCollection, multiVecParams).get();
   }
 
   @AfterEach
@@ -84,6 +103,7 @@ public class BaseQdrantTest {
       qdrantClient.deleteCollectionAsync(unnamedVecCollection);
       qdrantClient.deleteCollectionAsync(namedVecCollection);
       qdrantClient.deleteCollectionAsync(sparseVecCollection);
+      qdrantClient.deleteCollectionAsync(multiVecCollection);
       qdrantClient.close();
     }
   }

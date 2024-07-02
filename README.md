@@ -137,6 +137,51 @@ Reference: [Creating a collection with sparse vectors](https://qdrant.tech/docum
 </details>
 
 <details>
+  <summary><b>Multi-vector</b></summary>
+
+```json
+{
+    "collection_name": "{collection_name}",
+    "id": 1,
+    "vector": {
+        "some-multi": [
+            [
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5,
+                0.6,
+                0.7,
+                0.8,
+                0.9,
+                1.0
+            ],
+            [
+                1.0,
+                0.9,
+                0.8,
+                0.5,
+                0.4,
+                0.8,
+                0.6,
+                0.4,
+                0.2,
+                0.1
+            ]
+        ]
+    },
+    "payload": {
+        "name": "kafka",
+        "description": "Kafka is a distributed streaming platform",
+        "url": "https://kafka.apache.org/"
+    }
+}
+```
+
+</details>
+
+<details>
   <summary><b>Combination of named dense and sparse vectors</b></summary>
 
 Reference:

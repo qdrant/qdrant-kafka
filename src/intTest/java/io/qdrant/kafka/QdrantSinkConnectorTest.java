@@ -61,4 +61,19 @@ public class QdrantSinkConnectorTest extends BaseKafkaConnectTest {
 
     waitForPoints(sparseVecCollection, pointsCount);
   }
+
+  @Test
+  public void testMultiVector() throws Exception {
+    connect.configureConnector(CONNECTOR_NAME, connectorProperties());
+    waitForConnectorToStart(CONNECTOR_NAME, 1);
+
+    int pointsCount = randomPositiveInt(100);
+    int multiSize = randomPositiveInt(20);
+
+    for (int i = 0; i < pointsCount; i++) {
+      writeMultiVector(multiVecCollection, i, multiVecSize, multiVecName, multiSize);
+    }
+
+    waitForPoints(multiVecCollection, pointsCount);
+  }
 }

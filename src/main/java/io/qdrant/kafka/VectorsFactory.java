@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.kafka.connect.errors.DataException;
 
 /* Helper to convert JSON vector representations into io.qdrant.client.grpc.Points.Vectors. */
+
 // Example JSON inputs:
 // {
 //   "vector": [
@@ -48,6 +49,17 @@ import org.apache.kafka.connect.errors.DataException;
 //     }
 //   }
 // }
+
+// {
+//   "vector": {
+//     "some-name": [
+//       [0.041732933, 0.013779674, -0.027564144],
+//       [0.051345434, 0.013743223, -0.027576543],
+//       [0.041732933, 0.013779674, -0.027564144]
+//     ]
+//   }
+// }
+
 class VectorsFactory {
 
   public static Vectors vectors(Value vectorValue) throws DataException {
@@ -67,17 +79,6 @@ class VectorsFactory {
     return vectorsBuilder.build();
   }
 
-  private static Vector parseDenseVector(ListValue listValue) throws DataException {
-    Vector.Builder vectorBuilder = Vector.newBuilder();
-    for (Value value : listValue.getValuesList()) {
-      if (!value.hasDoubleValue()) {
-        throw new DataException("Vector data must be a list of floats");
-      }
-      vectorBuilder.addData((float) value.getDoubleValue());
-    }
-    return vectorBuilder.build();
-  }
-
   private static NamedVectors parseNamedVectors(Struct struct) throws DataException {
     NamedVectors.Builder namedVectorsBuilder = NamedVectors.newBuilder();
     for (Map.Entry<String, Value> entry : struct.getFieldsMap().entrySet()) {
@@ -92,6 +93,40 @@ class VectorsFactory {
       }
     }
     return namedVectorsBuilder.build();
+  }
+
+  private static Vector parseDenseVector(ListValue listValue) throws DataException {
+    Vector.Builder vectorBuilder = Vector.newBuilder();
+    for (Value value : listValue.getValuesList()) {
+      if (value.hasListValue()) {
+        return parseMultiDenseVector(listValue);
+      }
+
+      if (!value.hasDoubleValue()) {
+        throw new DataException("Dense vector data must be a list of floats");
+      }
+      vectorBuilder.addData((float) value.getDoubleValue());
+    }
+    return vectorBuilder.build();
+  }
+
+  private static Vector parseMultiDenseVector(ListValue listValue) throws DataException {
+    Vector.Builder vectorBuilder = Vector.newBuilder();
+    int numRows = listValue.getValuesCount();
+
+    for (Value row : listValue.getValuesList()) {
+      if (!row.hasListValue()) {
+        throw new DataException("Multi vector data must be a list of lists of floats");
+      }
+      for (Value value : row.getListValue().getValuesList()) {
+        if (!value.hasDoubleValue()) {
+          throw new DataException("Multi vector data must be a list of lists of floats");
+        }
+        vectorBuilder.addData((float) value.getDoubleValue());
+      }
+    }
+    vectorBuilder.setVectorsCount(numRows);
+    return vectorBuilder.build();
   }
 
   private static Vector parseSparseVector(Struct struct) throws DataException {
