@@ -66,6 +66,53 @@ class VectorsFactoryTest {
                     .addValues(Value.newBuilder().setDoubleValue(0.52354).build())
                     .build())
             .build());
+    fieldsMap.put(
+        "multi",
+        Value.newBuilder()
+            .setListValue(
+                ListValue.newBuilder()
+                    .addValues(
+                        Value.newBuilder()
+                            .setListValue(
+                                ListValue.newBuilder()
+                                    .addValues(Value.newBuilder().setDoubleValue(0.32).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.432).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.423).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.52354).build())
+                                    .build())
+                            .build())
+                    .addValues(
+                        Value.newBuilder()
+                            .setListValue(
+                                ListValue.newBuilder()
+                                    .addValues(Value.newBuilder().setDoubleValue(0.32).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.432).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.423).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.52354).build())
+                                    .build())
+                            .build())
+                    .addValues(
+                        Value.newBuilder()
+                            .setListValue(
+                                ListValue.newBuilder()
+                                    .addValues(Value.newBuilder().setDoubleValue(0.32).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.432).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.423).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.52354).build())
+                                    .build())
+                            .build())
+                    .addValues(
+                        Value.newBuilder()
+                            .setListValue(
+                                ListValue.newBuilder()
+                                    .addValues(Value.newBuilder().setDoubleValue(0.32).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.432).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.423).build())
+                                    .addValues(Value.newBuilder().setDoubleValue(0.52354).build())
+                                    .build())
+                            .build())
+                    .build())
+            .build());
 
     Struct struct = Struct.newBuilder().putAllFields(fieldsMap).build();
     Value vectorValue = Value.newBuilder().setStructValue(struct).build();
@@ -74,9 +121,13 @@ class VectorsFactoryTest {
 
     assertTrue(vectors.hasVectors());
     NamedVectors namedVectors = vectors.getVectors();
-    assertEquals(2, namedVectors.getVectorsCount());
+    assertEquals(3, namedVectors.getVectorsCount());
     assertTrue(namedVectors.containsVectors("boi"));
     assertTrue(namedVectors.containsVectors("gal"));
+    assertTrue(namedVectors.containsVectors("multi"));
+
+    Vector multiVector = namedVectors.getVectorsOrThrow("multi");
+    assertEquals(4, multiVector.getVectorsCount());
   }
 
   @Test

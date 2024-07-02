@@ -43,7 +43,7 @@ def kafkaVersion = '3.5.0'
 
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
-	implementation 'io.qdrant:client:1.9.1'
+	implementation 'io.qdrant:client:1.10.0'
 	implementation 'io.grpc:grpc-protobuf:1.59.0'
 	implementation "io.grpc:grpc-netty-shaded:1.59.0"
 	implementation 'com.google.guava:guava:33.2.1-jre'
