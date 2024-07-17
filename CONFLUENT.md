@@ -1,4 +1,4 @@
-# Usage with Self-Hosted Kafka
+# Usage with Confluent
 
 ## Installation
 
