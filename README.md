@@ -1,6 +1,6 @@
-# Qdrant Connector with Self-Hosted Kafka
+# Qdrant Sink Connector
 
-Use Qdrant as a sink destination in [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html). Supports streaming dense/sparse vectors into Qdrant collections.
+Use Qdrant as a sink destination in [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html). Supports streaming dense/sparse/multi vectors into Qdrant collections.
 
 ## Usage
 
