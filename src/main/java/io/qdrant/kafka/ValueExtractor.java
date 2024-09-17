@@ -18,7 +18,7 @@ class ValueExtractor {
   private static final String COLLECTION_NAME_KEY = "collection_name";
   private static final String VECTOR_KEY = "vector";
   private static final String PAYLOAD_KEY = "payload";
-  private static final String[] REQUIRED_FIELDS = {"collection_name", "id", "vector"};
+  private static final String[] REQUIRED_FIELDS = {"collection_name", "id"};
 
   private final Map<String, Value> valueMap;
 
@@ -75,6 +75,10 @@ class ValueExtractor {
 
   public Vectors getVector() {
     Value vectorValue = this.valueMap.get(VECTOR_KEY);
+
+    if (vectorValue == null) {
+      return Vectors.getDefaultInstance();
+    }
 
     return VectorsFactory.vectors(vectorValue);
   }
