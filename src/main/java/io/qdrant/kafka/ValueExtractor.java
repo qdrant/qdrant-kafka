@@ -77,7 +77,7 @@ class ValueExtractor {
   public Vectors getVector() {
     Value vectorValue = this.valueMap.get(VECTOR_KEY);
 
-    if (vectorValue == null) {
+    if (vectorValue == null || vectorValue.hasNullValue()) {
       return Vectors.newBuilder().setVectors(NamedVectors.getDefaultInstance()).build();
     }
 
