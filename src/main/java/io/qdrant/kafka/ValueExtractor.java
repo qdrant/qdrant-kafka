@@ -5,6 +5,7 @@ import static io.qdrant.client.PointIdFactory.id;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.qdrant.client.grpc.JsonWithInt.Value;
+import io.qdrant.client.grpc.Points.NamedVectors;
 import io.qdrant.client.grpc.Points.PointId;
 import io.qdrant.client.grpc.Points.PointStruct;
 import io.qdrant.client.grpc.Points.Vectors;
@@ -18,7 +19,7 @@ class ValueExtractor {
   private static final String COLLECTION_NAME_KEY = "collection_name";
   private static final String VECTOR_KEY = "vector";
   private static final String PAYLOAD_KEY = "payload";
-  private static final String[] REQUIRED_FIELDS = {"collection_name", "id", "vector"};
+  private static final String[] REQUIRED_FIELDS = {"collection_name", "id"};
 
   private final Map<String, Value> valueMap;
 
@@ -75,6 +76,10 @@ class ValueExtractor {
 
   public Vectors getVector() {
     Value vectorValue = this.valueMap.get(VECTOR_KEY);
+
+    if (vectorValue == null) {
+      return Vectors.newBuilder().setVectors(NamedVectors.getDefaultInstance()).build();
+    }
 
     return VectorsFactory.vectors(vectorValue);
   }

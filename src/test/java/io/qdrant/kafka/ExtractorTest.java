@@ -122,7 +122,7 @@ class ExtractorTest {
     valueMap.put("id", 12345L);
 
     ValueExtractor extractor = new ValueExtractor(valueMap);
-    assertThrows(DataException.class, extractor::validateOptions);
+    assertDoesNotThrow(extractor::validateOptions);
   }
 
   @Test
