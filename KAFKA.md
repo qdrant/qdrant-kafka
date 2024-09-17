@@ -22,7 +22,7 @@
 
     ```properties
     name=qdrant-kafka
-    connector.class=io.qdrant.kafka.QdrantSinkConnnector
+    connector.class=io.qdrant.kafka.QdrantSinkConnector
     qdrant.grpc.url=https://xyz-example.eu-central.aws.cloud.qdrant.io:6334
     qdrant.api.key=<paste-your-api-key-here>
     topics=topic_0
