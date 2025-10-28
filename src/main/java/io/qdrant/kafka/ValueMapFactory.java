@@ -59,7 +59,8 @@ final class ValueMapFactory {
       case NUMBER_VALUE:
         Double numberValue = val.getNumberValue();
         // Use the integer overload of value() if the number is an integer
-        // Otherwise, set as double
+        // This handles cases where JSON serialization converts long values to double values
+        // but we want to preserve them as integers
         return (numberValue % 1 == 0) ? value(numberValue.longValue()) : value(numberValue);
 
       case STRUCT_VALUE:

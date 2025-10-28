@@ -102,10 +102,13 @@ class VectorsFactory {
         return parseMultiDenseVector(listValue);
       }
 
-      if (!value.hasDoubleValue()) {
-        throw new DataException("Dense vector data must be a list of floats");
+      if (value.hasDoubleValue()) {
+        vectorBuilder.addData((float) value.getDoubleValue());
+      } else if (value.hasIntegerValue()) {
+        vectorBuilder.addData((float) value.getIntegerValue());
+      } else {
+        throw new DataException("Dense vector data must be a list of numbers");
       }
-      vectorBuilder.addData((float) value.getDoubleValue());
     }
     return vectorBuilder.build();
   }
@@ -119,10 +122,13 @@ class VectorsFactory {
         throw new DataException("Multi vector data must be a list of lists of floats");
       }
       for (Value value : row.getListValue().getValuesList()) {
-        if (!value.hasDoubleValue()) {
-          throw new DataException("Multi vector data must be a list of lists of floats");
+        if (value.hasDoubleValue()) {
+          vectorBuilder.addData((float) value.getDoubleValue());
+        } else if (value.hasIntegerValue()) {
+          vectorBuilder.addData((float) value.getIntegerValue());
+        } else {
+          throw new DataException("Multi vector data must be a list of lists of numbers");
         }
-        vectorBuilder.addData((float) value.getDoubleValue());
       }
     }
     vectorBuilder.setVectorsCount(numRows);

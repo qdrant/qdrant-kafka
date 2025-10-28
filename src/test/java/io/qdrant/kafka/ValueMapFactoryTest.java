@@ -115,4 +115,34 @@ class ValueMapFactoryTest {
 
     assertEquals(expectedValue, result);
   }
+
+  // Ref: https://github.com/qdrant/qdrant-kafka/issues/9
+  @Test
+  void testParseFloatListValue() {
+    List<com.google.protobuf.Value> floatArray =
+        Arrays.asList(
+            com.google.protobuf.Value.newBuilder().setNumberValue(0.0).build(),
+            com.google.protobuf.Value.newBuilder().setNumberValue(1.1).build());
+    com.google.protobuf.ListValue floatListValue =
+        com.google.protobuf.ListValue.newBuilder().addAllValues(floatArray).build();
+    List<com.google.protobuf.Value> values =
+        Arrays.asList(
+            com.google.protobuf.Value.newBuilder().setStringValue("item1").build(),
+            com.google.protobuf.Value.newBuilder().setListValue(floatListValue).build());
+
+    com.google.protobuf.ListValue listValue =
+        com.google.protobuf.ListValue.newBuilder().addAllValues(values).build();
+    com.google.protobuf.Value input =
+        com.google.protobuf.Value.newBuilder().setListValue(listValue).build();
+
+    Value result = ValueMapFactory.parse(input);
+
+    Value expectedListValue =
+        ValueFactory.list(
+            Arrays.asList(
+                ValueFactory.value("item1"),
+                ValueFactory.list(Arrays.asList(ValueFactory.value(0L), ValueFactory.value(1.1)))));
+
+    assertEquals(expectedListValue, result);
+  }
 }
