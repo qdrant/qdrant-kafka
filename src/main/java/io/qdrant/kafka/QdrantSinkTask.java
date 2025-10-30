@@ -21,7 +21,7 @@ public class QdrantSinkTask extends SinkTask {
 
   @Override
   public String version() {
-    return "1.2.0";
+    return "1.2.2";
   }
 
   @Override
@@ -57,7 +57,7 @@ public class QdrantSinkTask extends SinkTask {
         pointsWithRecords
             .computeIfAbsent(e.getCollectionName(), k -> new HashMap<>())
             .put(e.getPointStruct(), record);
-      } catch (InvalidProtocolBufferException | JsonProcessingException e) {
+      } catch (InvalidProtocolBufferException | JsonProcessingException | DataException e) {
         if (reporter == null) throw new DataException("Invalid sink record", e);
         reporter.report(record, e);
       }
@@ -68,7 +68,17 @@ public class QdrantSinkTask extends SinkTask {
           List<PointStruct> pointsList = new ArrayList<>(pointsMap.keySet());
           try {
             qdrantGrpc.upsert(collectionName, pointsList, null);
-          } catch (InterruptedException | ExecutionException e) {
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            pointsMap
+                .values()
+                .forEach(
+                    record -> {
+                      if (reporter == null)
+                        throw new DataException("Qdrant server exception during upsert.", e);
+                      reporter.report(record, e);
+                    });
+          } catch (ExecutionException e) {
             pointsMap
                 .values()
                 .forEach(

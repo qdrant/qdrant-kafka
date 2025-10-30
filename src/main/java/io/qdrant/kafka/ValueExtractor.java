@@ -31,7 +31,15 @@ class ValueExtractor {
   }
 
   public String getCollectionName() {
-    return this.valueMap.get(COLLECTION_NAME_KEY).getStringValue();
+    Value collectionNameValue = this.valueMap.get(COLLECTION_NAME_KEY);
+    if (!collectionNameValue.hasStringValue()) {
+      throw new DataException("Collection name must be a string");
+    }
+    String collectionName = collectionNameValue.getStringValue();
+    if (collectionName.isEmpty()) {
+      throw new DataException("Collection name cannot be empty");
+    }
+    return collectionName;
   }
 
   public PointId getPointId() {
@@ -39,8 +47,16 @@ class ValueExtractor {
 
     switch (idCandidate.getKindCase()) {
       case STRING_VALUE:
-        UUID uuid = UUID.fromString(idCandidate.getStringValue());
-        return id(uuid);
+        try {
+          UUID uuid = UUID.fromString(idCandidate.getStringValue());
+          return id(uuid);
+        } catch (IllegalArgumentException e) {
+          throw new DataException(
+              String.format(
+                  "Point ID must be a valid UUID string. Invalid UUID: '%s'",
+                  idCandidate.getStringValue()),
+              e);
+        }
 
       case INTEGER_VALUE:
         long numId = idCandidate.getIntegerValue();
@@ -96,6 +112,10 @@ class ValueExtractor {
     for (String field : REQUIRED_FIELDS) {
       if (!this.valueMap.containsKey(field) || this.valueMap.get(field) == null) {
         throw new DataException(String.format("'%s' value is required", field));
+      }
+      Value value = this.valueMap.get(field);
+      if (value.hasNullValue()) {
+        throw new DataException(String.format("'%s' value cannot be null", field));
       }
     }
   }
