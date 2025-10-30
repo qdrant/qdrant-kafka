@@ -96,6 +96,10 @@ class VectorsFactory {
   }
 
   private static Vector parseDenseVector(ListValue listValue) throws DataException {
+    if (listValue.getValuesCount() == 0) {
+      throw new DataException("Dense vector cannot be empty");
+    }
+
     Vector.Builder vectorBuilder = Vector.newBuilder();
     for (Value value : listValue.getValuesList()) {
       if (value.hasListValue()) {
@@ -114,13 +118,33 @@ class VectorsFactory {
   }
 
   private static Vector parseMultiDenseVector(ListValue listValue) throws DataException {
+    if (listValue.getValuesCount() == 0) {
+      throw new DataException("Multi vector cannot be empty");
+    }
+
     Vector.Builder vectorBuilder = Vector.newBuilder();
     int numRows = listValue.getValuesCount();
+    int expectedDimension = -1;
 
     for (Value row : listValue.getValuesList()) {
       if (!row.hasListValue()) {
         throw new DataException("Multi vector data must be a list of lists of floats");
       }
+
+      int rowDimension = row.getListValue().getValuesCount();
+      if (rowDimension == 0) {
+        throw new DataException("Multi vector rows cannot be empty");
+      }
+
+      if (expectedDimension == -1) {
+        expectedDimension = rowDimension;
+      } else if (rowDimension != expectedDimension) {
+        throw new DataException(
+            String.format(
+                "Multi vector rows must have consistent dimensions (expected: %d, found: %d)",
+                expectedDimension, rowDimension));
+      }
+
       for (Value value : row.getListValue().getValuesList()) {
         if (value.hasDoubleValue()) {
           vectorBuilder.addData((float) value.getDoubleValue());
@@ -142,20 +166,40 @@ class VectorsFactory {
       throw new DataException("Sparse vector must contain 'indices' and 'values' fields");
     }
 
+    Value valuesField = fields.get("values");
+    Value indicesField = fields.get("indices");
+
+    if (!valuesField.hasListValue()) {
+      throw new DataException("Sparse vector 'values' field must be a list");
+    }
+
+    if (!indicesField.hasListValue()) {
+      throw new DataException("Sparse vector 'indices' field must be a list");
+    }
+
     Vector.Builder vectorBuilder = Vector.newBuilder();
     SparseIndices.Builder sparseIndicesBuilder = SparseIndices.newBuilder();
 
-    ListValue valuesValue = fields.get("values").getListValue();
+    ListValue valuesValue = valuesField.getListValue();
     vectorBuilder = parseDenseVector(valuesValue).toBuilder();
 
     List<Integer> indicesList = new ArrayList<>();
-    ListValue indicesValue = fields.get("indices").getListValue();
+    ListValue indicesValue = indicesField.getListValue();
     for (Value value : indicesValue.getValuesList()) {
       if (!value.hasIntegerValue()) {
         throw new DataException("Indices must be a list of integers");
       }
       indicesList.add((int) value.getIntegerValue());
     }
+
+    if (indicesList.size() != valuesValue.getValuesCount()) {
+      throw new DataException(
+          String.format(
+              "Sparse vector 'indices' and 'values' must have the same length (indices: %d, values:"
+                  + " %d)",
+              indicesList.size(), valuesValue.getValuesCount()));
+    }
+
     sparseIndicesBuilder.addAllData(indicesList);
     vectorBuilder.setIndices(sparseIndicesBuilder.build());
 
