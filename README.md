@@ -244,4 +244,4 @@ Reference:
 
 ## LICENSE
 
-Apache 2.0 © [2024](https://github.com/qdrant/qdrant-kafka/blob/main/LICENSE)
+[Apache 2.0](https://github.com/qdrant/qdrant-kafka/blob/main/LICENSE)
