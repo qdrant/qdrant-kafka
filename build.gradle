@@ -7,11 +7,11 @@ plugins {
 	id 'maven-publish'
 
 	id "com.diffplug.spotless" version "6.22.0"
-	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'com.gradleup.shadow' version '8.3.6'
 }
 
 group = 'io.qdrant'
-version = '1.2.2'
+version = '1.2.3'
 description = 'Kafka Sink Connector for Qdrant.'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -47,7 +47,7 @@ dependencies {
 	implementation 'io.grpc:grpc-protobuf:1.59.0'
 	implementation "io.grpc:grpc-netty-shaded:1.59.0"
 	implementation 'com.google.guava:guava:33.2.1-jre'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'
 	implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
 	implementation 'org.slf4j:slf4j-api:2.0.13'
 
