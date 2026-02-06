@@ -8,6 +8,7 @@ import org.apache.kafka.common.config.types.Password;
 public class QdrantSinkConfig extends AbstractConfig {
   protected static final String GRPC_URL = "qdrant.grpc.url";
   protected static final String API_KEY = "qdrant.api.key";
+  protected static final String COLLECTION_NAME = "qdrant.collection.name";
 
   public QdrantSinkConfig(ConfigDef config, Map<String, String> parsedConfig) {
     super(config, parsedConfig);
@@ -30,7 +31,13 @@ public class QdrantSinkConfig extends AbstractConfig {
             ConfigDef.Type.PASSWORD,
             "",
             ConfigDef.Importance.HIGH,
-            "API key to authenticate with Qdrant server");
+            "API key to authenticate with Qdrant server")
+        .define(
+            COLLECTION_NAME,
+            ConfigDef.Type.STRING,
+            "",
+            ConfigDef.Importance.MEDIUM,
+            "Target collection name. If set, overrides record-level collection_name. ");
   }
 
   public String getGrpcUrl() {
@@ -39,5 +46,9 @@ public class QdrantSinkConfig extends AbstractConfig {
 
   public Password getApiKey() {
     return getPassword(API_KEY);
+  }
+
+  public String getCollectionName() {
+    return getString(COLLECTION_NAME);
   }
 }

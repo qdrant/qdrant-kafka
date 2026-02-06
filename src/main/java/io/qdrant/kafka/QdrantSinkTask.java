@@ -21,7 +21,7 @@ public class QdrantSinkTask extends SinkTask {
 
   @Override
   public String version() {
-    return "1.2.2";
+    return "1.3.0";
   }
 
   @Override
@@ -46,13 +46,15 @@ public class QdrantSinkTask extends SinkTask {
     }
     Map<String, Map<PointStruct, SinkRecord>> pointsWithRecords = new HashMap<>();
 
+    String collectionNameOverride = config.getCollectionName();
+
     for (SinkRecord record : records) {
       try {
         if (record.value() == null) {
           log.warn("Record value is null. Skipping.");
           continue;
         }
-        ValueExtractor e = new ValueExtractor(record.value());
+        ValueExtractor e = new ValueExtractor(record.value(), collectionNameOverride);
         e.validateOptions();
         pointsWithRecords
             .computeIfAbsent(e.getCollectionName(), k -> new HashMap<>())

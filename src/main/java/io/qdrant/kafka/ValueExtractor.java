@@ -22,15 +22,26 @@ class ValueExtractor {
   private static final String[] REQUIRED_FIELDS = {"collection_name", "id"};
 
   private final Map<String, Value> valueMap;
+  private final String collectionNameOverride;
 
   ValueExtractor(Object object) throws InvalidProtocolBufferException, JsonProcessingException {
+    this(object, null);
+  }
+
+  ValueExtractor(Object object, String collectionNameOverride)
+      throws InvalidProtocolBufferException, JsonProcessingException {
     // We turn the entire message into Map<String, Value>
     // This is a bit of a hack, but it's the easiest way to work with the data
     // We get the nice type checking of Value, and we can easily access the fields.
     this.valueMap = ValueMapFactory.valueMap(object);
+    this.collectionNameOverride = collectionNameOverride;
   }
 
   public String getCollectionName() {
+    if (collectionNameOverride != null && !collectionNameOverride.isEmpty()) {
+      return collectionNameOverride;
+    }
+
     Value collectionNameValue = this.valueMap.get(COLLECTION_NAME_KEY);
     if (!collectionNameValue.hasStringValue()) {
       throw new DataException("Collection name must be a string");
