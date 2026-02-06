@@ -1,6 +1,7 @@
 /* (C)2024 */
 package io.qdrant.kafka;
 
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -75,5 +76,21 @@ public class QdrantSinkConnectorTest extends BaseKafkaConnectTest {
     }
 
     waitForPoints(multiVecCollection, pointsCount);
+  }
+
+  @Test
+  public void testConnectorLevelCollectionName() throws Exception {
+    Map<String, String> props = connectorProperties();
+    props.put("qdrant.collection.name", unnamedVecCollection);
+    connect.configureConnector(CONNECTOR_NAME, props);
+    waitForConnectorToStart(CONNECTOR_NAME, 1);
+
+    int pointsCount = randomPositiveInt(100);
+
+    for (int i = 0; i < pointsCount; i++) {
+      writeUnnamedVector("some-other-collection", i, unnamedVecSize);
+    }
+
+    waitForPoints(unnamedVecCollection, pointsCount);
   }
 }

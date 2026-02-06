@@ -13,6 +13,14 @@ Learn to use the connector with
 
 - [Self-hosted Kafka](https://github.com/qdrant/qdrant-kafka/blob/main/KAFKA.md)
 
+## Configuration
+
+| Name                     | Type   | Default                 | Description                                                                       |
+| ------------------------ | ------ | ----------------------- | --------------------------------------------------------------------------------- |
+| `qdrant.grpc.url`        | string | `http://localhost:6334` | Qdrant gRPC URL                                                                   |
+| `qdrant.api.key`         | string | null                    | API key for authentication                                                        |
+| `qdrant.collection.name` | string | null                    | Target collection name. If set, overrides the `collection_name` field in records. |
+
 ## Message Formats
 
 This sink connector supports messages with multiple dense/sparse vectors.

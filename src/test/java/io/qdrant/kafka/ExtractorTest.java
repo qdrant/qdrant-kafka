@@ -142,4 +142,13 @@ class ExtractorTest {
     ValueExtractor extractor = new ValueExtractor(valueMap);
     assertThrows(DataException.class, extractor::getPayload);
   }
+
+  @Test
+  void testCollectionNameOverride() throws InvalidProtocolBufferException, JsonProcessingException {
+    Map<String, Object> valueMap = new HashMap<>();
+    valueMap.put("collection_name", "record_level_collection");
+
+    ValueExtractor extractor = new ValueExtractor(valueMap, "connector_level_collection");
+    assertEquals("connector_level_collection", extractor.getCollectionName());
+  }
 }
