@@ -43,19 +43,19 @@ def kafkaVersion = '3.5.0'
 
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
-	implementation 'io.qdrant:client:1.10.0'
-	implementation 'io.grpc:grpc-protobuf:1.59.0'
-	implementation "io.grpc:grpc-netty-shaded:1.59.0"
-	implementation 'com.google.guava:guava:33.2.1-jre'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.6'
+	implementation 'io.qdrant:client:1.18.1'
+	implementation 'io.grpc:grpc-protobuf:1.81.0'
+	implementation "io.grpc:grpc-netty-shaded:1.81.0"
+	implementation 'com.google.guava:guava:33.6.0-jre'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 	implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
-	implementation 'org.slf4j:slf4j-api:2.0.13'
+	implementation 'org.slf4j:slf4j-api:2.0.18'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 
-	intTestImplementation 'org.testcontainers:junit-jupiter:1.19.6'
-	intTestImplementation 'org.testcontainers:qdrant:1.19.6'
+	intTestImplementation 'org.testcontainers:junit-jupiter:1.21.4'
+	intTestImplementation 'org.testcontainers:qdrant:1.21.4'
 	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
 	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
 	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion"
