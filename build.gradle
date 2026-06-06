@@ -39,7 +39,7 @@ configurations {
 	intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
-def kafkaVersion = '3.5.0'
+def kafkaVersion = '4.3.0'
 
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
