@@ -13,8 +13,8 @@ plugins {
 group = 'io.qdrant'
 version = '1.3.1'
 description = 'Kafka Sink Connector for Qdrant.'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 
 repositories {
@@ -53,6 +53,7 @@ dependencies {
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:6.1.0'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.1.0'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.1.0'
 
 	intTestImplementation 'org.testcontainers:junit-jupiter:1.19.6'
 	intTestImplementation 'org.testcontainers:qdrant:1.19.6'
