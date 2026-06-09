@@ -32,5 +32,5 @@ jobs:
       - name: Gradle Build
         uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
-          gradle-version: 8.5
+          gradle-version: wrapper
           arguments: build
