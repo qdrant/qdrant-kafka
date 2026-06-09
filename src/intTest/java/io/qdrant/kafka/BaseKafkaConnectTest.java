@@ -20,6 +20,7 @@ import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.DeleteTopicsResult;
 import org.apache.kafka.connect.json.JsonConverter;
 import org.apache.kafka.connect.runtime.AbstractStatus;
+import org.apache.kafka.connect.runtime.WorkerConfig;
 import org.apache.kafka.connect.runtime.rest.entities.ConnectorStateInfo;
 import org.apache.kafka.connect.util.clusters.EmbeddedConnectCluster;
 import org.apache.kafka.test.TestUtils;
@@ -47,7 +48,13 @@ public class BaseKafkaConnectTest extends BaseQdrantTest {
 
   @BeforeEach
   void startConnect() {
-    connect = new EmbeddedConnectCluster.Builder().name("qdrant-it-connect-cluster").build();
+    Map<String, String> workerProps = new HashMap<>();
+    workerProps.put(WorkerConfig.PLUGIN_DISCOVERY_CONFIG, "hybrid_warn");
+    connect =
+        new EmbeddedConnectCluster.Builder()
+            .name("qdrant-it-connect-cluster")
+            .workerProps(workerProps)
+            .build();
     connect.start();
     connect.kafka().createTopic(topicName);
   }

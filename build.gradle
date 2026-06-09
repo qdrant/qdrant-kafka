@@ -64,6 +64,7 @@ dependencies {
 	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
 	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion:test"
 	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion:test"
+	intTestImplementation "org.apache.kafka:kafka-test-common-runtime:$kafkaVersion"
 }
 
 java {
