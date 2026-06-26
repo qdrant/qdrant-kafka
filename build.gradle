@@ -7,7 +7,7 @@ plugins {
 	id 'maven-publish'
 
 	id "com.diffplug.spotless" version "8.7.0"
-	id 'com.gradleup.shadow' version '9.4.2'
+	id 'com.gradleup.shadow' version '9.4.3'
 }
 
 group = 'io.qdrant'
@@ -39,13 +39,13 @@ configurations {
 	intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
-def kafkaVersion = '4.3.0'
+def kafkaVersion = '4.3.1'
 
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
-	implementation 'io.qdrant:client:1.18.1'
-	implementation 'io.grpc:grpc-protobuf:1.82.0'
-	implementation "io.grpc:grpc-netty-shaded:1.82.0"
+	implementation 'io.qdrant:client:1.18.3'
+	implementation 'io.grpc:grpc-protobuf:1.82.1'
+	implementation "io.grpc:grpc-netty-shaded:1.82.1"
 	implementation 'com.google.guava:guava:33.6.0-jre'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 	implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
