@@ -2,6 +2,7 @@ package io.qdrant.kafka;
 
 import io.qdrant.client.QdrantClient;
 import io.qdrant.client.QdrantGrpcClient;
+import io.qdrant.client.grpc.Common.PointId;
 import io.qdrant.client.grpc.Points.PointStruct;
 import io.qdrant.client.grpc.Points.ShardKeySelector;
 import io.qdrant.client.grpc.Points.UpsertPoints;
@@ -42,6 +43,11 @@ public class QdrantGrpc implements Serializable {
       upsertPoints.setShardKeySelector(shardKeySelector);
     }
     client.upsertAsync(upsertPoints.build()).get();
+  }
+
+  public void delete(String collectionName, PointId pointId)
+      throws InterruptedException, ExecutionException {
+    client.deleteAsync(collectionName, List.of(pointId)).get();
   }
 
   public void close() {

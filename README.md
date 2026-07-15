@@ -250,6 +250,14 @@ Reference:
 
 </details>
 
+### Delete events and tombstones
+
+A Kafka tombstone has a `null` value. The connector deletes the Qdrant point whose `id` appears in the record key.
+
+```json
+{ "id": 1, "collection_name": "{collection_name}" }
+```
+
 ## LICENSE
 
 [Apache 2.0](https://github.com/qdrant/qdrant-kafka/blob/main/LICENSE)

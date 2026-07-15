@@ -43,6 +43,9 @@ class ValueExtractor {
     }
 
     Value collectionNameValue = this.valueMap.get(COLLECTION_NAME_KEY);
+    if (collectionNameValue == null || collectionNameValue.hasNullValue()) {
+      throw new DataException("'collection_name' value is required");
+    }
     if (!collectionNameValue.hasStringValue()) {
       throw new DataException("Collection name must be a string");
     }
@@ -55,6 +58,9 @@ class ValueExtractor {
 
   public PointId getPointId() {
     Value idCandidate = this.valueMap.get(ID_KEY);
+    if (idCandidate == null || idCandidate.hasNullValue()) {
+      throw new DataException("'id' value is required");
+    }
 
     switch (idCandidate.getKindCase()) {
       case STRING_VALUE:

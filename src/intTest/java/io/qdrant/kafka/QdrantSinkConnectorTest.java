@@ -93,4 +93,19 @@ public class QdrantSinkConnectorTest extends BaseKafkaConnectTest {
 
     waitForPoints(unnamedVecCollection, pointsCount);
   }
+
+  @Test
+  public void testTombstoneDeletesPoint() throws Exception {
+    Map<String, String> props = connectorProperties();
+    props.put("qdrant.collection.name", unnamedVecCollection);
+    connect.configureConnector(CONNECTOR_NAME, props);
+    waitForConnectorToStart(CONNECTOR_NAME, 1);
+
+    writeUnnamedVector(unnamedVecCollection, 1, unnamedVecSize);
+    waitForPoints(unnamedVecCollection, 1);
+
+    connect.kafka().produce(TOPIC_NAME, "{\"id\": 1}", null);
+
+    waitForPoints(unnamedVecCollection, 0);
+  }
 }
