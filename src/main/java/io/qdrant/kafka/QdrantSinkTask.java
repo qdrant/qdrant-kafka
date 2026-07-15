@@ -2,6 +2,7 @@ package io.qdrant.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.protobuf.InvalidProtocolBufferException;
+import io.qdrant.client.grpc.Common.PointId;
 import io.qdrant.client.grpc.Points.PointStruct;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +22,7 @@ public class QdrantSinkTask extends SinkTask {
 
   @Override
   public String version() {
-    return "1.3.3";
+    return "1.4.0";
   }
 
   @Override
@@ -49,9 +50,17 @@ public class QdrantSinkTask extends SinkTask {
     String collectionNameOverride = config.getCollectionName();
 
     for (SinkRecord record : records) {
+      if (record.value() == null) {
+        // Upserts are flushed first to preserve Kafka record order
+        // when a batch contains both an
+        // upsert and a later tombstone for the same point.
+        upsert(pointsWithRecords);
+        pointsWithRecords.clear();
+      }
       try {
         if (record.value() == null) {
-          log.warn("Record value is null. Skipping.");
+          ValueExtractor key = new ValueExtractor(record.key(), collectionNameOverride);
+          delete(key.getCollectionName(), key.getPointId(), record);
           continue;
         }
         ValueExtractor e = new ValueExtractor(record.value(), collectionNameOverride);
@@ -65,32 +74,36 @@ public class QdrantSinkTask extends SinkTask {
       }
     }
 
+    upsert(pointsWithRecords);
+  }
+
+  private void upsert(Map<String, Map<PointStruct, SinkRecord>> pointsWithRecords) {
     pointsWithRecords.forEach(
         (collectionName, pointsMap) -> {
           List<PointStruct> pointsList = new ArrayList<>(pointsMap.keySet());
           try {
             qdrantGrpc.upsert(collectionName, pointsList, null);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+          } catch (InterruptedException | ExecutionException e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             pointsMap
                 .values()
-                .forEach(
-                    record -> {
-                      if (reporter == null)
-                        throw new DataException("Qdrant server exception during upsert.", e);
-                      reporter.report(record, e);
-                    });
-          } catch (ExecutionException e) {
-            pointsMap
-                .values()
-                .forEach(
-                    record -> {
-                      if (reporter == null)
-                        throw new DataException("Qdrant server exception during upsert.", e);
-                      reporter.report(record, e);
-                    });
+                .forEach(record -> report(record, "Qdrant server exception during upsert.", e));
           }
         });
+  }
+
+  private void delete(String collectionName, PointId pointId, SinkRecord record) {
+    try {
+      qdrantGrpc.delete(collectionName, pointId);
+    } catch (InterruptedException | ExecutionException e) {
+      if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+      report(record, "Qdrant server exception during delete.", e);
+    }
+  }
+
+  private void report(SinkRecord record, String message, Exception exception) {
+    if (reporter == null) throw new DataException(message, exception);
+    reporter.report(record, exception);
   }
 
   @Override

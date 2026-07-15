@@ -135,6 +135,20 @@ class ExtractorTest {
   }
 
   @Test
+  void testMissingPointId() throws InvalidProtocolBufferException, JsonProcessingException {
+    ValueExtractor extractor = new ValueExtractor(new HashMap<>());
+
+    assertThrows(DataException.class, extractor::getPointId);
+  }
+
+  @Test
+  void testMissingCollectionName() throws InvalidProtocolBufferException, JsonProcessingException {
+    ValueExtractor extractor = new ValueExtractor(new HashMap<>());
+
+    assertThrows(DataException.class, extractor::getCollectionName);
+  }
+
+  @Test
   void testInvalidPayloadFormat() throws InvalidProtocolBufferException, JsonProcessingException {
     Map<String, Object> valueMap = new HashMap<>();
     valueMap.put("payload", true);
