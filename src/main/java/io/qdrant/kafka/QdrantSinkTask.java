@@ -22,7 +22,7 @@ public class QdrantSinkTask extends SinkTask {
 
   @Override
   public String version() {
-    return "1.4.0";
+    return "1.4.1";
   }
 
   @Override
