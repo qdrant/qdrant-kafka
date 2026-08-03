@@ -44,6 +44,8 @@ def kafkaVersion = '4.3.1'
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
 	implementation 'io.qdrant:client:1.18.3'
+	// lz4-java:1.11.1 fixes CVE-2026-59949.
+	implementation 'at.yawk.lz4:lz4-java:1.11.1'
 	implementation 'io.grpc:grpc-protobuf:1.82.2'
 	implementation "io.grpc:grpc-netty-shaded:1.82.2"
 	implementation 'com.google.guava:guava:33.6.0-jre'
