@@ -50,7 +50,7 @@ dependencies {
 	implementation "io.grpc:grpc-netty-shaded:1.83.1"
 	implementation 'com.google.guava:guava:33.7.1-jre'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.2'
-	implementation 'com.google.protobuf:protobuf-java-util:3.25.3'
+	implementation 'com.google.protobuf:protobuf-java-util:4.36.0'
 	implementation 'org.slf4j:slf4j-api:2.0.18'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:6.1.3'
