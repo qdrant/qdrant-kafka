@@ -45,12 +45,12 @@ dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
 	implementation 'io.qdrant:client:1.19.0'
 	// lz4-java:1.11.1 fixes CVE-2026-59949.
-	implementation 'at.yawk.lz4:lz4-java:1.11.2'
+	implementation 'at.yawk.lz4:lz4-java:1.11.3'
 	implementation 'io.grpc:grpc-protobuf:1.84.0'
 	implementation "io.grpc:grpc-netty-shaded:1.84.0"
 	implementation 'com.google.guava:guava:33.7.1-jre'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.2'
-	implementation 'com.google.protobuf:protobuf-java-util:4.36.1'
+	implementation 'com.google.protobuf:protobuf-java-util:4.36.2'
 	implementation 'org.slf4j:slf4j-api:2.0.19'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:6.1.3'
