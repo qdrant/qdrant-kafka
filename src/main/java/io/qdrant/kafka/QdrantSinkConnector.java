@@ -40,6 +40,6 @@ public class QdrantSinkConnector extends SinkConnector {
 
   @Override
   public String version() {
-    return "1.4.1";
+    return "1.4.2";
   }
 }
