@@ -91,6 +91,13 @@ spotless {
 
 shadowJar {
 	relocate 'io.grpc', 'shadow.grpc'
+	// Shadow 9 defaults to DuplicatesStrategy.EXCLUDE, which drops duplicate service files
+	// before they can be merged. That loses grpc-core's DnsNameResolverProvider and makes
+	// gRPC fall back to the "unix" scheme for every target.
+	// https://github.com/qdrant/qdrant-kafka/issues/62
+	filesMatching('META-INF/services/**') {
+		duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	}
 	mergeServiceFiles()
 	archiveClassifier.set('')
 }
