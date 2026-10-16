@@ -6,7 +6,7 @@ plugins {
 	id 'java-library'
 	id 'maven-publish'
 
-	id "com.diffplug.spotless" version "8.10.3"
+	id "com.diffplug.spotless" version "8.10.4"
 	id 'com.gradleup.shadow' version '9.6.1'
 }
 
@@ -46,8 +46,8 @@ dependencies {
 	implementation 'io.qdrant:client:1.19.0'
 	// lz4-java:1.11.1 fixes CVE-2026-59949.
 	implementation 'at.yawk.lz4:lz4-java:1.12.0'
-	implementation 'io.grpc:grpc-protobuf:1.84.0'
-	implementation "io.grpc:grpc-netty-shaded:1.84.0"
+	implementation 'io.grpc:grpc-protobuf:1.84.2'
+	implementation "io.grpc:grpc-netty-shaded:1.84.2"
 	implementation 'com.google.guava:guava:33.7.2-jre'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.3'
 	implementation 'com.google.protobuf:protobuf-java-util:4.36.2'
