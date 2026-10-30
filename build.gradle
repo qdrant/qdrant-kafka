@@ -39,17 +39,17 @@ configurations {
 	intTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
-def kafkaVersion = '4.3.2'
+def kafkaVersion = '4.4.0'
 
 dependencies {
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
-	implementation 'io.qdrant:client:1.19.0'
+	implementation 'io.qdrant:client:1.20.0'
 	// lz4-java:1.11.1 fixes CVE-2026-59949.
-	implementation 'at.yawk.lz4:lz4-java:1.12.0'
-	implementation 'io.grpc:grpc-protobuf:1.85.0'
-	implementation "io.grpc:grpc-netty-shaded:1.85.0"
+	implementation 'at.yawk.lz4:lz4-java:1.12.1'
+	implementation 'io.grpc:grpc-protobuf:1.85.1'
+	implementation "io.grpc:grpc-netty-shaded:1.85.1"
 	implementation 'com.google.guava:guava:33.7.2-jre'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.4'
 	implementation 'com.google.protobuf:protobuf-java-util:4.36.2'
 	implementation 'org.slf4j:slf4j-api:2.0.20'
 
