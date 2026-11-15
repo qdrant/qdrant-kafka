@@ -60,13 +60,12 @@ dependencies {
 	intTestImplementation 'org.testcontainers:junit-jupiter:1.21.4'
 	intTestImplementation 'org.testcontainers:qdrant:1.21.4'
 	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
-	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
 	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion"
+	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion:test-fixtures"
+	intTestImplementation("org.apache.kafka:connect-runtime:$kafkaVersion") {
+		capabilities { requireCapability('org.apache.kafka:runtime-test-fixtures') }
+	}
 	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion"
-	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion"
-	intTestImplementation "org.apache.kafka:kafka_2.13:$kafkaVersion:test"
-	intTestImplementation "org.apache.kafka:kafka-clients:$kafkaVersion:test"
-	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion:test"
 	intTestImplementation "org.apache.kafka:kafka-test-common-runtime:$kafkaVersion"
 }
 

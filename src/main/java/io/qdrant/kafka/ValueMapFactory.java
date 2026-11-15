@@ -67,10 +67,9 @@ final class ValueMapFactory {
         Struct.Builder structBuilder = Struct.newBuilder();
         val.getStructValue()
             .getFieldsMap()
-            .forEach(
-                (key, value) -> {
-                  structBuilder.putFields(key, parse(value));
-                });
+            .forEach((key, value) -> {
+              structBuilder.putFields(key, parse(value));
+            });
         return Value.newBuilder().setStructValue(structBuilder).build();
 
       case LIST_VALUE:

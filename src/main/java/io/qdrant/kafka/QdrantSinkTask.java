@@ -78,18 +78,17 @@ public class QdrantSinkTask extends SinkTask {
   }
 
   private void upsert(Map<String, Map<PointStruct, SinkRecord>> pointsWithRecords) {
-    pointsWithRecords.forEach(
-        (collectionName, pointsMap) -> {
-          List<PointStruct> pointsList = new ArrayList<>(pointsMap.keySet());
-          try {
-            qdrantGrpc.upsert(collectionName, pointsList, null);
-          } catch (InterruptedException | ExecutionException e) {
-            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
-            pointsMap
-                .values()
-                .forEach(record -> report(record, "Qdrant server exception during upsert.", e));
-          }
-        });
+    pointsWithRecords.forEach((collectionName, pointsMap) -> {
+      List<PointStruct> pointsList = new ArrayList<>(pointsMap.keySet());
+      try {
+        qdrantGrpc.upsert(collectionName, pointsList, null);
+      } catch (InterruptedException | ExecutionException e) {
+        if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+        pointsMap
+            .values()
+            .forEach(record -> report(record, "Qdrant server exception during upsert.", e));
+      }
+    });
   }
 
   private void delete(String collectionName, PointId pointId, SinkRecord record) {
