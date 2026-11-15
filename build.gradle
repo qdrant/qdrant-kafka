@@ -42,6 +42,21 @@ configurations {
 def kafkaVersion = '4.4.0'
 
 dependencies {
+	components {
+		withModule('org.apache.kafka:kafka-clients') {
+			// Kafka 4.4 publishes the fixture JAR without Gradle module metadata.
+			addVariant('testFixturesRuntimeElements', 'runtime') {
+				withFiles {
+					removeAllFiles()
+					addFile("kafka-clients-${id.version}-test-fixtures.jar")
+				}
+				withCapabilities {
+					removeCapability('org.apache.kafka', 'kafka-clients')
+					addCapability('org.apache.kafka', 'kafka-clients-test-fixtures', id.version)
+				}
+			}
+		}
+	}
 	implementation "org.apache.kafka:connect-api:$kafkaVersion"
 	implementation 'io.qdrant:client:1.20.0'
 	// lz4-java:1.11.1 fixes CVE-2026-59949.
@@ -67,6 +82,8 @@ dependencies {
 	}
 	intTestImplementation "org.apache.kafka:connect-runtime:$kafkaVersion"
 	intTestImplementation "org.apache.kafka:kafka-test-common-runtime:$kafkaVersion"
+	// Required by Kafka's client test fixtures, whose dependencies are not published in metadata.
+	intTestRuntimeOnly 'org.bouncycastle:bcpkix-jdk18on:1.85'
 }
 
 java {
